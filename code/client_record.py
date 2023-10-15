@@ -15,7 +15,7 @@ class Client_record:
     def add_client_records(self, client_record):
         self.list[client_record['name']] = client_record
 
-    def delete_client_records(self,client_record):
+    def delete_client_records(self, client_record):
         self.list = self.list.pop(client_record['name'])
 
 

@@ -1,12 +1,10 @@
-import sys
+from upload_client_request import Client
 from staff import Staff
 from PyQt5.QtWidgets import (QWidget,
                              QVBoxLayout,
-                             QMainWindow,
                              QPushButton,
                              QLabel,
-                             QLineEdit,
-                             QApplication)
+                             QLineEdit)
 
 class GUI(QWidget):
     def __init__(self):
@@ -31,6 +29,10 @@ class GUI(QWidget):
         self.login_button.setGeometry(150, 120, 100, 30)
         self.login_button.clicked.connect(self.login)
 
+        self.client_button = QPushButton('Client')
+        self.client_button.setGeometry(150, 150, 100, 30)
+        self.client_button.clicked.connect(self.client)
+
         self.invalid_label = QLabel('')
         self.invalid_label.setGeometry(50, 160, 300, 20)
 
@@ -40,6 +42,7 @@ class GUI(QWidget):
         layout.addWidget(self.password_label)
         layout.addWidget(self.password_input)
         layout.addWidget(self.login_button)
+        layout.addWidget(self.client_button)
         layout.addWidget(self.invalid_label)
 
         self.setLayout(layout)
@@ -66,10 +69,13 @@ class GUI(QWidget):
             self.open_Service_Sub_team_window()
         elif username in Staff and Staff[username]['password'] == password and Staff[username]['position'] == 'production sub team':
             self.open_Production_Sub_team_window()
-        elif username == 'client':
-            self.open_client_window()
         else:
             self.invalid_label.setText('Invalid!')
+
+    def client(self):
+        self.close()
+        self.new_window = Client_GUI()
+        self.new_window.show()
 
     def open_customer_service_window(self):
         self.close()
@@ -116,10 +122,6 @@ class GUI(QWidget):
         self.new_window = ProductionSubTeam_GUI()
         self.new_window.show()
 
-    def open_client_window(self):
-        self.close()
-        self.new_window = Client_GUI()
-        self.new_window.show()
 
 class CustomerService_GUI(QWidget):
     def __init__(self):
@@ -370,30 +372,38 @@ class Client_GUI(QWidget):
         self.setWindowTitle('Client GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
-        self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
+        self.name_label = QLabel('name')
+        self.name_label.setGeometry(50, 20, 100, 20)
+        self.name_input = QLineEdit()
+        self.name_input.setGeometry(50, 30, 100, 20)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
+        self.email_label = QLabel('email')
+        self.email_label.setGeometry(50, 40, 100, 20)
+        self.email_input = QLineEdit()
+        self.email_input.setGeometry(50, 50, 100, 20)
+
+        self.Todo1_button = QPushButton('upload reqeust')
+        self.Todo1_button.setGeometry(50, 90, 100, 30)
         self.Todo1_button.clicked.connect(self.todo1)
 
+        self.result_label = QLabel('')
+        self.result_label.setGeometry(50, 100, 100, 30)
+
         layout = QVBoxLayout()
-        layout.addWidget(self.text1_label)
-        layout.addWidget(self.text1_input)
+        layout.addWidget(self.name_label)
+        layout.addWidget(self.name_input)
+        layout.addWidget(self.email_label)
+        layout.addWidget(self.email_input)
         layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.result_label)
 
         self.setLayout(layout)
 
     def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
-
-
-
-
-
-
-
+        name = self.name_input.text()
+        email = self.email_input.text()
+        client = Client()
+        client.upload_basic_info(name, email)
+        Client_request_dict = client.return_client_request_to_dict()
+        self.result_label.setText('uploaded!')
+        print("uploaded!")
