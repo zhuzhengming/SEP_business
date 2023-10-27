@@ -1,23 +1,33 @@
-from upload_client_request import Client
+from upload_client_request import Client, Client_request
 from staff import Staff
 from PyQt5.QtWidgets import (QWidget,
                              QVBoxLayout,
                              QPushButton,
                              QLabel,
                              QLineEdit)
+from staff import (CustomerService,
+                   SeniorCustomerService,
+                   FinancialManager,
+                   AdminastrationManager)
 
+from event_plan import EventPlan
+from client_record import client_records
+
+customerService = CustomerService()
+seniorCustomerService = SeniorCustomerService()
+financialManager = FinancialManager()
+administrationManager = AdminastrationManager()
 class GUI(QWidget):
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle('Login')
-        self.setGeometry(100,100,400,200)
-
+        self.setGeometry(100, 100, 400, 200)
 
         self.username_label = QLabel('username')
-        self.username_label.setGeometry(50,50,100,20)
+        self.username_label.setGeometry(50, 50, 100, 20)
         self.username_input = QLineEdit()
-        self.username_input.setGeometry(150,80,100,20)
+        self.username_input.setGeometry(150, 80, 100, 20)
 
         self.password_label = QLabel('password')
         self.password_label.setGeometry(50, 80, 100, 20)
@@ -34,7 +44,7 @@ class GUI(QWidget):
         self.client_button.clicked.connect(self.client)
 
         self.invalid_label = QLabel('')
-        self.invalid_label.setGeometry(50, 160, 300, 20)
+        self.invalid_label.setGeometry(50, 200, 300, 20)
 
         layout = QVBoxLayout()
         layout.addWidget(self.username_label)
@@ -129,53 +139,116 @@ class CustomerService_GUI(QWidget):
         self.setWindowTitle('CustomerService GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
+        self.text1_label = QLabel('request_decision')
         self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.Todo1_button = QPushButton('view_client_request')
+        self.Todo1_button.clicked.connect(self.view_client_request)
+
+        self.Todo2_button = QPushButton('submit')
+        self.Todo2_button.clicked.connect(self.submit)
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
 
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
 
+    def view_client_request(self):
+        self.output_label.setText(Client_request["name"]+'\n'
+                                  +Client_request["email"]+'\n'
+                                  +Client_request["budget"]+'\n'
+                                  +Client_request["preferences"]+'\n'
+                                  +Client_request["discount"])
+
+    def submit(self):
+        if self.text1_input.text() == 'approved':
+            customerService.decision = 'approved'
+            self.output_label.setText("approved")
+        elif self.text1_input.text() == 'reject':
+            self.output_label.setText("reject")
+        else:
+            self.output_label.setText("invalid")
 class SeniorCustomerService_GUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('SeniorCustomerService GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
+        self.text1_label = QLabel('request_decision')
         self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.Todo1_button = QPushButton('view_client_request')
+        self.Todo1_button.clicked.connect(self.view_client_request)
+
+        self.Todo2_button = QPushButton('manage_client_records')
+        self.Todo2_button.clicked.connect(self.manage_client_records)
+
+        self.Todo3_button = QPushButton('submit')
+        self.Todo3_button.clicked.connect(self.submit)
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
-
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.Todo3_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def view_client_request(self):
+        self.output_label.setText(Client_request["name"] + '\n'
+                                  + Client_request["email"] + '\n'
+                                  + Client_request["budget"] + '\n'
+                                  + Client_request["preferences"] + '\n'
+                                  + Client_request["discount"])
+
+    def manage_client_records(self):
+        if Client_request["name"] in client_records:
+            self.output_label.setText("old customer")
+        else:
+            self.output_label.setText("new customer")
+
+
+    def submit(self):
+        if customerService.decision == 'approved':
+            if self.text1_input.text() == 'approved':
+                # # view record
+                # seniorCustomerService.manage_client_record()
+                seniorCustomerService.decision = 'approved'
+                self.output_label.setText("approved")
+            elif self.text1_input.text() == 'reject':
+                self.output_label.setText("reject")
+            else:
+                self.output_label.setText("invalid")
+        else:
+            self.output_label.setText("reject")
+
 
 class FinancialManager_GUI(QWidget):
     def __init__(self):
@@ -183,26 +256,84 @@ class FinancialManager_GUI(QWidget):
         self.setWindowTitle('FinancialManager GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
+        self.text1_label = QLabel('request_decision')
         self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.Todo1_button = QPushButton('view_client_request')
+        self.Todo1_button.clicked.connect(self.view_client_request)
+
+        self.Todo2_button = QPushButton('check_discount')
+        self.Todo2_button.clicked.connect(self.check_discount)
+
+        self.Todo3_button = QPushButton('submit')
+        self.Todo3_button.clicked.connect(self.submit)
+
+        self.Todo4_button = QPushButton('view_extra_negotiation')
+        self.Todo4_button.clicked.connect(self.view_extra_negotiation)
+
+        self.text2_label = QLabel('ex_budget_negotiation_reply')
+        self.text2_input = QLineEdit()
+
+        self.Todo5_button = QPushButton('upload_extra_budget_negotiation')
+        self.Todo5_button.clicked.connect(self.upload_extra_budget_negotiation)
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.Todo2_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.Todo3_button)
+        layout.addWidget(self.Todo4_button)
+        layout.addWidget(self.text2_label)
+        layout.addWidget(self.text2_input)
+        layout.addWidget(self.Todo5_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
 
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def check_discount(self):
+        if Client_request["name"] in client_records:
+            Client_request["discount"] = "discount"
+            self.output_label.setText("discount")
+
+    def view_client_request(self):
+        self.output_label.setText(Client_request["name"] + '\n'
+                                  + Client_request["email"] + '\n'
+                                  + Client_request["budget"] + '\n'
+                                  + Client_request["preferences"] + '\n'
+                                  + Client_request["discount"])
+    def submit(self):
+        if seniorCustomerService.decision == 'approved':
+            if self.text1_input.text() == 'approved':
+                financialManager.decision = 'approved'
+                self.output_label.setText("approved")
+            elif self.text1_input.text() == 'reject':
+                self.output_label.setText("reject")
+            else:
+                self.output_label.setText("invalid")
+        else:
+            self.output_label.setText("invalid")
+
+    def view_extra_negotiation(self):
+        self.output_label.setText(EventPlan["extra_budget_negotiation_request"])
+
+    def upload_extra_budget_negotiation(self):
+        extra_budget_negotiation = self.text2_input.text()
+        EventPlan["extra_budget_negotiation_reply"] = extra_budget_negotiation
+        self.output_label.setText("extra budget negotiation reply uploaded")
+
+
 
 class AdministrationManager_GUI(QWidget):
     def __init__(self):
@@ -210,80 +341,223 @@ class AdministrationManager_GUI(QWidget):
         self.setWindowTitle('AdministrationManager GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
+        self.text1_label = QLabel('request_decision')
         self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.Todo1_button = QPushButton('view_client_request')
+        self.Todo1_button.clicked.connect(self.view_client_request)
+
+        self.Todo2_button = QPushButton('submit')
+        self.Todo2_button.clicked.connect(self.submit)
+
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
 
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def view_client_request(self):
+        self.output_label.setText(Client_request["name"] + '\n'
+                                  + Client_request["email"] + '\n'
+                                  + Client_request["budget"] + '\n'
+                                  + Client_request["preferences"] + '\n'
+                                  + Client_request["discount"])
+
+    def submit(self):
+        if financialManager.decision == 'approved':
+            if self.text1_input.text() == 'approved':
+                administrationManager.decision = 'approved'
+                self.output_label.setText("approved")
+            elif self.text1_input.text() == 'reject':
+                self.output_label.setText("reject")
+            else:
+                self.output_label.setText("invalid")
+        else:
+            self.output_label.setText("invalid")
 
 class ProductionManager_GUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('ProductionManager GUI')
-        self.setGeometry(100, 100, 400, 200)
+        self.setGeometry(100, 100, 400, 400)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
+        self.Todo1_button = QPushButton('view_sub_plan')
+        self.Todo1_button.clicked.connect(self.view_sub_plan)
+
+        self.text1_label = QLabel('sub_task')
         self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.Todo2_button = QPushButton('upload_sub_task')
+        self.Todo2_button.clicked.connect(self.upload_sub_task)
+
+        self.Todo3_button = QPushButton('view_recruitment_reply')
+        self.Todo3_button.clicked.connect(self.view_recruitment_reply)
+
+        self.text2_label = QLabel('recruitment_request')
+        self.text2_input = QLineEdit()
+
+        self.Todo4_button = QPushButton('upload_recruitment_request')
+        self.Todo4_button.clicked.connect(self.upload_recruitment_request)
+
+        self.Todo5_button = QPushButton('view_ex_budget_request')
+        self.Todo5_button.clicked.connect(self.view_ex_budget_reply)
+
+        self.text3_label = QLabel('ex_budget_request')
+        self.text3_input = QLineEdit()
+
+        self.Todo6_button = QPushButton('upload_ex_budget_request')
+        self.Todo6_button.clicked.connect(self.upload_ex_budget_request)
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
-
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.Todo3_button)
+        layout.addWidget(self.text2_label)
+        layout.addWidget(self.text2_input)
+        layout.addWidget(self.Todo4_button)
+        layout.addWidget(self.Todo5_button)
+        layout.addWidget(self.text3_label)
+        layout.addWidget(self.text3_input)
+        layout.addWidget(self.Todo6_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def view_sub_plan(self):
+        self.output_label.setText(EventPlan["production_subteam_plan"])
+
+    def upload_sub_task(self):
+        sub_plan = self.text1_input.text()
+        EventPlan["production_subteam_task"] = sub_plan
+        self.output_label.setText("sub_task_uploaded!")
+
+    def view_recruitment_reply(self):
+        self.output_label.setText(EventPlan["recruitment_reply"])
+
+    def upload_recruitment_request(self):
+        recruitment_request = self.text2_input.text()
+        EventPlan["recruitment_request"] = recruitment_request
+        self.output_label.setText("recruitment_request_uploaded!")
+
+    def view_ex_budget_reply(self):
+        self.output_label.setText(EventPlan["extra_budget_negotiation_reply"])
+
+    def upload_ex_budget_request(self):
+        ex_budget_request = self.text3_input.text()
+        EventPlan["extra_budget_negotiation_request"] = ex_budget_request
+        self.output_label.setText("ex_budget_request_updated")
 
 class ServiceManager_GUI(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('ServiceManager GUI')
-        self.setGeometry(100, 100, 400, 200)
+        self.setGeometry(100, 100, 400, 400)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
+        self.Todo1_button = QPushButton('view_sub_plan')
+        self.Todo1_button.clicked.connect(self.view_sub_plan)
+
+        self.text1_label = QLabel('sub_task')
         self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.Todo2_button = QPushButton('upload_sub_task')
+        self.Todo2_button.clicked.connect(self.upload_sub_task)
+
+        self.Todo3_button = QPushButton('view_recruitment_reply')
+        self.Todo3_button.clicked.connect(self.view_recruitment_reply)
+
+        self.text2_label = QLabel('recruitment_request')
+        self.text2_input = QLineEdit()
+
+        self.Todo4_button = QPushButton('upload_recruitment_request')
+        self.Todo4_button.clicked.connect(self.upload_recruitment_request)
+
+        self.Todo5_button = QPushButton('view_ex_budget_request')
+        self.Todo5_button.clicked.connect(self.view_ex_budget_reply)
+
+        self.text3_label = QLabel('ex_budget_request')
+        self.text3_input = QLineEdit()
+
+        self.Todo6_button = QPushButton('upload_ex_budget_request')
+        self.Todo6_button.clicked.connect(self.upload_ex_budget_request)
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
-
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.Todo3_button)
+        layout.addWidget(self.text2_label)
+        layout.addWidget(self.text2_input)
+        layout.addWidget(self.Todo4_button)
+        layout.addWidget(self.Todo5_button)
+        layout.addWidget(self.text3_label)
+        layout.addWidget(self.text3_input)
+        layout.addWidget(self.Todo6_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def view_sub_plan(self):
+        self.output_label.setText(EventPlan["service_subteam_plan"])
+
+    def upload_sub_task(self):
+        sub_plan = self.text1_input.text()
+        EventPlan["service_subteam_task"] = sub_plan
+        self.output_label.setText("sub_task_uploaded!")
+
+    def view_recruitment_reply(self):
+        self.output_label.setText(EventPlan["recruitment_reply"])
+
+    def upload_recruitment_request(self):
+        recruitment_request = self.text2_input.text()
+        EventPlan["recruitment_request"] = recruitment_request
+        self.output_label.setText("recruitment_request_uploaded!")
+
+    def view_ex_budget_reply(self):
+        self.output_label.setText(EventPlan["extra_budget_negotiation_reply"])
+
+    def upload_ex_budget_request(self):
+        ex_budget_request = self.text3_input.text()
+        EventPlan["extra_budget_negotiation_request"] = ex_budget_request
+        self.output_label.setText("ex_budget_request_updated")
+
 
 class ServiceSubTeam_GUI(QWidget):
     def __init__(self):
@@ -291,53 +565,85 @@ class ServiceSubTeam_GUI(QWidget):
         self.setWindowTitle('ServiceSubteam GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
-        self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
+        self.Todo1_button = QPushButton('view_sub_task')
+        self.Todo1_button.clicked.connect(self.view_sub_task)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.text1_label = QLabel('sub_plan')
+        self.text1_input = QLineEdit()
+
+        self.Todo2_button = QPushButton('upload_sub_plan')
+        self.Todo2_button.clicked.connect(self.upload_sub_plan)
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
 
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def view_sub_task(self):
+        self.output_label.setText(EventPlan["service_subteam_task"])
+
+    def upload_sub_plan(self):
+        sub_plan = self.text1_input.text()
+        EventPlan["service_subteam_plan"] = sub_plan
+        self.output_label.setText("sub plan uploaded")
 
 class ProductionSubTeam_GUI(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle('ProductionSubTeam GUI')
+        self.setWindowTitle('ProductionSubteam GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
-        self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
+        self.Todo1_button = QPushButton('view_sub_task')
+        self.Todo1_button.clicked.connect(self.view_sub_task)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.text1_label = QLabel('sub_plan')
+        self.text1_input = QLineEdit()
+
+        self.Todo2_button = QPushButton('upload_sub_plan')
+        self.Todo2_button.clicked.connect(self.upload_sub_plan)
+
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
 
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def view_sub_task(self):
+        self.output_label.setText(EventPlan["production_subteam_task"])
+
+    def upload_sub_plan(self):
+        sub_plan = self.text1_input.text()
+        EventPlan["production_subteam_plan"] = sub_plan
+        self.output_label.setText("sub plan uploaded")
 
 class HRManager_GUI(QWidget):
     def __init__(self):
@@ -345,26 +651,41 @@ class HRManager_GUI(QWidget):
         self.setWindowTitle('HR Manager GUI')
         self.setGeometry(100, 100, 400, 200)
 
-        self.text1_label = QLabel('text1')
-        self.text1_label.setGeometry(50, 50, 100, 20)
-        self.text1_input = QLineEdit()
-        self.text1_input.setGeometry(150, 80, 100, 20)
+        self.Todo1_button = QPushButton('view_recruitment_request')
+        self.Todo1_button.clicked.connect(self.view_recruitment_request)
 
-        self.Todo1_button = QPushButton('Todo1')
-        self.Todo1_button.setGeometry(50, 100, 100, 30)
-        self.Todo1_button.clicked.connect(self.todo1)
+        self.text1_label = QLabel('sub_plan')
+        self.text1_input = QLineEdit()
+
+        self.Todo2_button = QPushButton('upload_recruitment_reply')
+        self.Todo2_button.clicked.connect(self.upload_recruitment_reply)
+
+        self.home_button = QPushButton('home')
+        self.home_button.clicked.connect(self.home)
+
+        self.output_label = QLabel('')
 
         layout = QVBoxLayout()
+        layout.addWidget(self.Todo1_button)
         layout.addWidget(self.text1_label)
         layout.addWidget(self.text1_input)
-        layout.addWidget(self.Todo1_button)
-
+        layout.addWidget(self.Todo2_button)
+        layout.addWidget(self.home_button)
+        layout.addWidget(self.output_label)
         self.setLayout(layout)
 
-    def todo1(self):
-        # 在这里添加按钮点击事件的处理逻辑
-        print("todo 1!")
-         # 处理输入的文本，可以根据需要执行相关操作
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
+
+    def view_recruitment_request(self):
+        self.output_label.setText(EventPlan["recruitment_request"])
+
+    def upload_recruitment_reply(self):
+        recruitment_reply = self.text1_input.text()
+        EventPlan["recruitment_reply"] = recruitment_reply
+        self.output_label.setText("recruitment reply uploaded")
 
 class Client_GUI(QWidget):
     def __init__(self):
@@ -373,37 +694,51 @@ class Client_GUI(QWidget):
         self.setGeometry(100, 100, 400, 200)
 
         self.name_label = QLabel('name')
-        self.name_label.setGeometry(50, 20, 100, 20)
         self.name_input = QLineEdit()
-        self.name_input.setGeometry(50, 30, 100, 20)
 
         self.email_label = QLabel('email')
-        self.email_label.setGeometry(50, 40, 100, 20)
         self.email_input = QLineEdit()
-        self.email_input.setGeometry(50, 50, 100, 20)
+
+        self.budget_label = QLabel('budget')
+        self.budget_input = QLineEdit()
+
+        self.preferences_label = QLabel('preferences')
+        self.preferences_input = QLineEdit()
 
         self.Todo1_button = QPushButton('upload reqeust')
-        self.Todo1_button.setGeometry(50, 90, 100, 30)
         self.Todo1_button.clicked.connect(self.todo1)
 
+        self.home_button = QPushButton('Home')
+        self.home_button.clicked.connect(self.home)
+
         self.result_label = QLabel('')
-        self.result_label.setGeometry(50, 100, 100, 30)
 
         layout = QVBoxLayout()
         layout.addWidget(self.name_label)
         layout.addWidget(self.name_input)
         layout.addWidget(self.email_label)
         layout.addWidget(self.email_input)
+        layout.addWidget(self.budget_label)
+        layout.addWidget(self.budget_input)
+        layout.addWidget(self.preferences_label)
+        layout.addWidget(self.preferences_input)
         layout.addWidget(self.Todo1_button)
+        layout.addWidget(self.home_button)
         layout.addWidget(self.result_label)
-
         self.setLayout(layout)
+
+    def home(self):
+        self.close()
+        self.new_window = GUI()
+        self.new_window.show()
 
     def todo1(self):
         name = self.name_input.text()
         email = self.email_input.text()
-        client = Client()
-        client.upload_basic_info(name, email)
-        Client_request_dict = client.return_client_request_to_dict()
+        budget = self.budget_input.text()
+        preferences = self.preferences_input.text()
         self.result_label.setText('uploaded!')
-        print("uploaded!")
+        Client_request["name"] = name
+        Client_request["email"] = email
+        Client_request["budget"] = budget
+        Client_request["preferences"] = preferences

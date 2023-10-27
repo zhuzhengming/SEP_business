@@ -1,3 +1,11 @@
+Client_request = {
+            'name': 'None',
+            'email': 'None',
+            'budget': 'None',
+            'preferences': 'None',
+            'decision': 'None',
+            'discount': 'None'
+        }
 class Client:
     def __init__(self):
         self.init_data()
@@ -8,6 +16,7 @@ class Client:
         self.budget = None
         self.preferences = None
         self.decision = 'Pending'
+        self.discount = None
 
     def propose_init_budget_preferences(self, budget, preferences):
         self.budget = budget
@@ -27,7 +36,8 @@ class Client:
             'email': self.email,
             'budget': self.budget,
             'preferences': self.preferences,
-            'decision': self.decision
+            'decision': self.decision,
+            'discount': self.discount
         }
         return dict
 
