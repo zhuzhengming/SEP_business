@@ -19,6 +19,7 @@ class Manager:
 
     def view_client_reqeust(self, Client_request):
         self.client_reqeust = Client_request
+        print(self.client_reqeust)
 
     def feedback(self):
         return self.decision

@@ -234,7 +234,6 @@ class SeniorCustomerService_GUI(QWidget):
         else:
             self.output_label.setText("new customer")
 
-
     def submit(self):
         if customerService.decision == 'approved':
             if self.text1_input.text() == 'approved':
